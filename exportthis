@@ -1,13 +1,46 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    exportthis                                         :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: hchakoub <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/09/26 20:45:52 by hchakoub          #+#    #+#              #
+#    Updated: 2022/09/26 20:45:55 by hchakoub         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 #!/bin/zsh
 
+FILE="/Users/$USER/.exports"
 THIS=$(pwd)
 
-if grep -Fxq "export PATH=\"$PATH:$THIS\"" /Users/hchakoub/.zshrc
+if [ ! -f $FILE ]
 then
-  echo "path alredy exorted !"
+    echo  "creating .exports file"
+    touch $FILE
+    if [ $? -eq 0 ]; then
+        echo "file successfully created"
+    else
+        echo "faild to create exports file"
+    fi
 else
-  echo "exporting : $THIS"
-  echo "export PATH=\"$PATH:$THIS\""  >> ~/.zshrc
-  echo "$THIS has bees exported successfully"
+    echo ".exports file is already exist"
 fi
-source ~/.zshrc
+
+if grep -Fxq ". $FILE" /Users/$USER/.zshrc ; then
+    echo "file already imported in .zshrc"
+else
+    echo ". $FILE" >> /Users/$USER/.zshrc
+fi
+
+if grep -Fxq "path+=($THIS)" $FILE
+then
+    echo "path alredy exorted !"
+else
+    echo "exporting : $THIS"
+    echo "path+=($THIS)"  >> $FILE
+    echo "$THIS has bees exported successfully"
+fi
+
+source /Users/$USER/.zshrc
