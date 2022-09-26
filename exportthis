@@ -1,0 +1,13 @@
+#!/bin/zsh
+
+THIS=$(pwd)
+
+if grep -Fxq "export PATH=\"$PATH:$THIS\"" /Users/hchakoub/.zshrc
+then
+  echo "path alredy exorted !"
+else
+  echo "exporting : $THIS"
+  echo "export PATH=\"$PATH:$THIS\""  >> ~/.zshrc
+  echo "$THIS has bees exported successfully"
+fi
+source ~/.zshrc
