@@ -1,20 +1,60 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    getnode                                            :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: hchakoub <hchakoub@student.1337.ma>        +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/09/28 15:59:30 by hchakoub          #+#    #+#              #
+#    Updated: 2022/09/28 15:59:36 by hchakoub         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 #!/bin/bash
 
-if [ ! -d "/Users/hchakoub/goinfre/node" ]; then
-    cd "/Users/hchakoub/goinfre/" &&  curl -s https://nodejs.org/dist/v16.17.0/node-v16.17.0-darwin-x64.tar.gz -o node.tar \
+
+FILE="/Users/$USER/.exports"
+THIS=$(pwd)
+
+# creating export file if not exist
+if [ ! -f $FILE ]
+then
+    echo  "creating .exports file"
+    touch $FILE
+    if [ $? -eq 0 ]; then
+        echo "file successfully created"
+    else
+        echo "faild to create exports file"
+    fi
+else
+    echo ".exports file is already exist"
+fi
+
+
+# puting the exports file in .zshrc if it is not existing
+if grep -Fxq ". $FILE" /Users/$USER/.zshrc ; then
+    echo "file already imported in .zshrc"
+else
+    echo ". $FILE" >> /Users/$USER/.zshrc
+fi
+
+
+# downloading node js
+if [ ! -d "/Users/$USER/goinfre/node" ]; then
+    cd "/Users/$USER/goinfre/" &&  curl -s https://nodejs.org/dist/v16.17.0/node-v16.17.0-darwin-x64.tar.gz -o node.tar \
     && tar -xf node.tar && mv node-v16.17.0-darwin-x64 node
-    export PATH="$PATH:/Users/hchakoub/goinfre/node/bin"
+    # export PATH="$PATH:/Users/$USER/goinfre/node/bin"
   else
     echo "node folder already exist"
 fi
-if grep -Fxq "export PATH=\"$PATH:/Users/hchakoub/goinfre/node/bin\"" /Users/hchakoub/.zshrc
+if grep -Fxq "path+=(/Users/$USER/goinfre/node/bin)" /Users/$USER/.exports
 then
 # code if found
   echo "paht already exported"
 else
 # code if not found
   echo "exporting path"
-  echo "export PATH=\"$PATH:/Users/hchakoub/goinfre/node/bin\"" >> /Users/hchakoub/.zshrc
-  #source /Users/hchakoub/.zshrc
+  echo "path+=(/Users/$USER/goinfre/node/bin)" >> /Users/$USER/.exports
+  source /Users/$USER/.zshrc
 fi
 
